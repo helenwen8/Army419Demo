@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Item to Supply</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 50px;
+        }
+        form, .supply-table-container {
+            max-width: 600px;
+            margin: auto;
+            display: flex;
+            flex-direction: column;
+        }
+        label, input, button {
+            margin: 10px 0;
+        }
+        button {
+            padding: 10px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>Add Item to Supply</h1>
+    <form id="supplyForm">
+        <label for="nsn">NSN:</label>
+        <input type="text" id="nsn" name="NSN" required>
+
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="Name" required>
+
+        <label for="serial_num">Serial Number:</label>
+        <input type="text" id="serial_num" name="Serial_Num">
+
+        <label for="description">Description:</label>
+        <input type="text" id="description" name="Description">
+
+        <button type="button" onclick="submitForm()">Add Item</button>
+    </form>
+
+    <p id="responseMessage"></p>
+
+    <h2>All Supplies</h2>
+    <div class="supply-table-container">
+        <table id="supplyTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>NSN</th>
+                    <th>Name</th>
+                    <th>Serial Number</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Data will be inserted here by JavaScript -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        function submitForm() {
+            const nsn = document.getElementById("nsn").value;
+            const name = document.getElementById("name").value;
+            const serialNum = document.getElementById("serial_num").value;
+            const description = document.getElementById("description").value;
+
+            const data = { NSN: nsn, Name: name, Serial_Num: serialNum, Description: description };
+
+            fetch("/api/supply", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("responseMessage").innerText = data.message;
+                document.getElementById("supplyForm").reset();
+                fetchAllSupplies(); // Refresh the table after adding a new item
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                document.getElementById("responseMessage").innerText = "An error occurred.";
+            });
+        }
+
+        function fetchAllSupplies() {
+            fetch("/api/supply/all")
+                .then(response => response.json())
+                .then(data => {
+                    const supplyTableBody = document.getElementById("supplyTable").querySelector("tbody");
+                    supplyTableBody.innerHTML = ""; // Clear the table before adding new data
+
+                    data.forEach(item => {
+                        const row = document.createElement("tr");
+                        row.innerHTML = `
+                            <td>${item.ID || "N/A"}</td>
+                            <td>${item.NSN || "N/A"}</td>
+                            <td>${item.Name || "N/A"}</td>
+                            <td>${item.Serial_Num || "N/A"}</td>
+                            <td>${item.Description || "N/A"}</td>
+                        `;
+                        supplyTableBody.appendChild(row);
+                    });
+                })
+                .catch(error => {
+                    console.error("Error fetching supplies:", error);
+                });
+        }
+
+        // Fetch all supplies on page load
+        fetchAllSupplies();
+    </script>
+</body>
+</html>
