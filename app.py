@@ -31,14 +31,26 @@ def add_supply():
 
     return jsonify({"message": "Item added to Supply table"}), 201
 
-@app.route('/api/supply/all', methods=['GET'])
-def get_all_supplies():
+
+@app.route('/api/supply/borrowing', methods=['GET'])
+def get_all_loaned():
+    user_id = request.args.get("userid")
+
+    query = """
+    SELECT u.DODID, u.LastName, u.FirstName, s.NSN, s.Name, s.Serial_Num, b.Count, b.Checkout_Date
+    FROM Supply as s
+    JOIN Borrowing AS b ON s.ID = b.Item_ID
+    JOIN User AS u ON b.Lender_DODID = u.DODID
+    WHERE u.DODID = ?
+    """
+
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM Supply")
+    cursor.execute(query, (user_id,))
     rows = cursor.fetchall()
     conn.close()
     supplies = [dict(row) for row in rows]
+
     return jsonify(supplies), 200
 
 if __name__ == "__main__":

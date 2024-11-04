@@ -68,11 +68,14 @@
         <table id="supplyTable">
             <thead>
                 <tr>
-                    <th>ID</th>
-                    <th>NSN</th>
-                    <th>Name</th>
-                    <th>Serial Number</th>
-                    <th>Description</th>
+                    <th>DODID</th>
+                    <th>Borrower Last Name</th>
+                    <th>Borrower First Name</th>
+                    <th>Item NSN</th>
+                    <th>Item Name</th>
+                    <th>Item Serial Number</th>
+                    <th>Count</th>
+                    <th>Checkout Date</th>
                 </tr>
             </thead>
             <tbody>
@@ -110,7 +113,7 @@
         }
 
         function fetchAllSupplies() {
-            fetch("/api/supply/all")
+            fetch("/api/supply/borrowing?userid=6028029736")
                 .then(response => response.json())
                 .then(data => {
                     const supplyTableBody = document.getElementById("supplyTable").querySelector("tbody");
@@ -119,11 +122,14 @@
                     data.forEach(item => {
                         const row = document.createElement("tr");
                         row.innerHTML = `
-                            <td>${item.ID || "N/A"}</td>
-                            <td>${item.NSN || "N/A"}</td>
-                            <td>${item.Name || "N/A"}</td>
-                            <td>${item.Serial_Num || "N/A"}</td>
-                            <td>${item.Description || "N/A"}</td>
+                            <td>${item.DODID || ""}</td>
+                            <td>${item.LastName || ""}</td>
+                            <td>${item.FirstName || ""}</td>
+                            <td>${item.NSN || ""}</td>
+                            <td>${item.Name || ""}</td>
+                            <td>${item.Serial_Num || ""}</td>
+                            <td>${item.Count || ""}</td>
+                            <td>${item.Checkout_Date || ""}</td>
                         `;
                         supplyTableBody.appendChild(row);
                     });
