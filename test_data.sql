@@ -15,8 +15,8 @@ VALUES (Null, 'OCCS', Null, Null),
 
 INSERT INTO 
 User (DODID, FirstName, LastName, Email, Phone) 
-VALUES (6246120335, 'Scott', 'Clancy', 'scott@army.com', '7225265193'),
-    (6028029736, 'Joseph', 'Mayo', 'joseph@army.com', '5185207573'),
+VALUES (6246120335, 'Joseph', 'Mayo', 'scott@army.com', '7225265193'),
+    (6028029736, 'Scott', 'Clancy', 'joseph@army.com', '5185207573'),
     (5124865241, Null, 'Sauls', 'sauls@army.com', '8798190633'),
     (8815194770, 'Eric', 'Chambers', 'eric@army.com', '5253009893'),
     (8817346652, 'Devin', 'Irelan', 'devin@army.com', '6751060212');
