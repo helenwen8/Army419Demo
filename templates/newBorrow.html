@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Item to Supply</title> -->
+    <link rel="stylesheet" media="all" type="text/css" href="{{ url_for('static',filename='css/styles.css') }}">
+</head>
+<body>
+    <nav>
+        <div class="navbar-title">
+            <p>P I N E C O N E</p>
+        </div>
+        <ul>
+            <li><a href="{{ url_for('index') }}">Loaned Items</a></li>
+            <li><a href="{{ url_for('borrowedItems') }}">Borrowed Items</a></li>
+        </ul>
+        <div class="profile-section">
+            <!-- Name to the left of the profile picture -->
+            <span class="profile-name">S. Clancy</span>
+            
+            <!-- Profile picture -->
+            <div class="profile-picture">
+                <img src="{{ url_for('static', filename='images/profile.png') }}" alt="Profile Picture">
+            </div>
+        </div>
+    </nav>
+
+    <h1>New Loan</h1>
+    <form id="supplyForm">
+        <label for="item">Item:</label>
+        <input type="text" id="item" name="Item" required>
+
+        <label for="borrower">Borrower:</label>
+        <input type="text" id="borrower" name="Borrower" required>
+
+        <label for="count">Count:</label>
+        <input type="text" id="count" name="Count">
+
+        <label for="reason">Reason:</label>
+        <input type="text" id="reason" name="Reason">
+
+        <label for="date">Checkout Date:</label>
+        <input type="text" id="date" name="Date">
+
+        <label for="initials">Borrowers Initials:</label>
+        <input type="text" id="initials" name="Initials">
+
+        <button type="button" onclick="submitForm()">Loan Item</button>
+    </form>
+
+    <script>
+        function submitForm() {
+            const item = document.getElementById("item").value;
+            const borrower = document.getElementById("borrower").value;
+            const count = document.getElementById("count").value;
+            const reason = document.getElementById("reason").value;
+            const date = document.getElementById("date").value;
+            const initials = document.getElementById("initials").value;
+
+            const data = { 
+                item: item, 
+                lender: "6028029736", 
+                borrower: borrower, 
+                count: count, 
+                reason: reason, 
+                date: date,
+                initials: initials
+            };
+
+            fetch("/api/borrow", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("responseMessage").innerText = data.message;
+                document.getElementById("supplyForm").reset();
+                fetchAllSupplies(); // Refresh the table after adding a new item
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                document.getElementById("responseMessage").innerText = "An error occurred.";
+            });
+        }
+    </script>
+
+    <p id="responseMessage"></p>
+</body>

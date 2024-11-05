@@ -1,0 +1,121 @@
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 50px;
+    padding-top: 60px;
+}
+
+nav {
+    background-color: #6B7682;
+    width: 95%;  /* Make navbar span the entire screen width */
+    padding: 10px 40px;  /* Adjust top and bottom padding */
+    position: fixed;  /* Keep navbar at the top of the page */
+    top: 0;
+    left: 0;
+    z-index: 1000;  /* Ensure navbar is on top of other elements */
+
+    display: flex;
+    justify-content: space-between;  /* Space out the navbar items: title on the left, links on the right */
+    align-items: center;  /* Vertically center content */
+    padding-left: 40px;
+    padding-right: 40px;
+}
+
+.navbar-title p {
+    color: white;
+    font-size: 30px;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+
+nav ul {
+    display: flex;
+    justify-content: center; /* Center the navbar items horizontally */
+    list-style-type: none;
+}
+
+nav ul li {
+    margin: 0 20px 0 20px;  /* Add horizontal spacing between navbar items */
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+    display: block;
+    padding: 10px 20px;  /* Make clickable area larger */
+}
+
+nav ul li a:hover {
+    background-color: #8F9CAC;  /* Change background on hover */
+    border-radius: 5px;
+}
+
+.profile-section {
+    display: flex;  /* Align name and profile picture horizontally */
+    align-items: center;  /* Vertically center the name and profile picture */
+    margin-left: auto;  /* Push the profile section to the far right */
+}
+
+.profile-name {
+    color: white;
+    font-size: 18px;
+    margin-right: 10px;  /* Space between name and profile picture */
+}
+
+.profile-picture img {
+    width: 40px;  /* Set the width of the image */
+    height: 40px;  /* Set the height to match the width */
+    border-radius: 50%;  /* Make the image a circle */
+    object-fit: cover;  /* Ensure the image covers the area without distortion */
+    border: 2px solid #fff;  /* Optional: Add a white border around the image */
+}
+
+form, .supply-table-container {
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    width: 400px;
+    height: 30px;
+}
+
+input {
+    margin-bottom: 10px;
+    width: 400px;
+    height: 30px;
+}
+
+.loan-button {
+    margin: 0 0 20px 0;
+    padding: 0 0 0 0;
+}
+
+button {
+    margin: 30px 0;
+    width: 200px;
+    height: 40px;
+    padding: 10px;
+    background-color: #6B7682;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+button:hover {
+    background-color: #333;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+th, td {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+th {
+    background-color: #f2f2f2;
+}

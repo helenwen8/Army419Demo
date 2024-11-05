@@ -26,20 +26,15 @@
                 </div>
             </div>
         </nav>
-        
-        <h1>Loaned Items</h1>
-        
-        <a href="{{ url_for('newBorrow') }}">
-            <button class="loan-button">Loan an Item</button>
-        </a>
-        
+    
+        <h1>Borrowed Items</h1>
         <div class="supply-table-container">
             <table id="supplyTable">
                 <thead>
                     <tr>
-                        <th>Borrower Last Name</th>
-                        <th>Borrower First Name</th>
-                        <th>Borrower DODID</th>
+                        <th>Loaner Last Name</th>
+                        <th>Loaner First Name</th>
+                        <th>Loaner DODID</th>
                         <th>Item NSN</th>
                         <th>Item Name</th>
                         <th>Item Serial Number</th>
@@ -57,7 +52,7 @@
     
         <script>
             function fetchAllLoaned() {
-                fetch("/api/supply/loaned?userid=6028029736")
+                fetch("/api/supply/borrowing?userid=6028029736")
                     .then(response => response.json())
                     .then(data => {
                         const supplyTableBody = document.getElementById("supplyTable").querySelector("tbody");

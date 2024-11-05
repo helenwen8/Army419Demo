@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Item to Supply</title> -->
+    <link rel="stylesheet" media="all" type="text/css" href="{{ url_for('static',filename='css/styles.css') }}">
+</head>
+<body>
+    <nav>
+        <div class="navbar-title">
+            <p>P I N E C O N E</p>
+        </div>
+        <ul>
+            <li><a href="{{ url_for('index') }}">Loaned Items</a></li>
+            <li><a href="{{ url_for('borrowedItems') }}">Borrowed Items</a></li>
+        </ul>
+        <div class="profile-section">
+            <!-- Name to the left of the profile picture -->
+            <span class="profile-name">S. Clancy</span>
+            
+            <!-- Profile picture -->
+            <div class="profile-picture">
+                <img src="{{ url_for('static', filename='images/profile.png') }}" alt="Profile Picture">
+            </div>
+        </div>
+    </nav>
+
+    <h1>Add Item to Supply</h1>
+    <form id="supplyForm">
+        <label for="nsn">NSN:</label>
+        <input type="text" id="nsn" name="NSN" required>
+
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="Name" required>
+
+        <label for="serial_num">Serial Number:</label>
+        <input type="text" id="serial_num" name="Serial_Num">
+
+        <label for="description">Description:</label>
+        <input type="text" id="description" name="Description">
+
+        <button type="button" onclick="submitForm()">Add Item</button>
+    </form>
+
+    <script>
+        function submitForm() {
+            const nsn = document.getElementById("nsn").value;
+            const name = document.getElementById("name").value;
+            const serialNum = document.getElementById("serial_num").value;
+            const description = document.getElementById("description").value;
+
+            const data = { NSN: nsn, Name: name, Serial_Num: serialNum, Description: description };
+
+            fetch("/api/supply", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("responseMessage").innerText = data.message;
+                document.getElementById("supplyForm").reset();
+                fetchAllSupplies(); // Refresh the table after adding a new item
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                document.getElementById("responseMessage").innerText = "An error occurred.";
+            });
+        }
+    </script>
+
+    <p id="responseMessage"></p>
+</body>
