@@ -15,10 +15,11 @@ CREATE TABLE Supply (
 -- Create the User table
 CREATE TABLE User (
     DODID VARCHAR(255) PRIMARY KEY,       -- Unique identifier for each user (e.g., Department of Defense ID)
-    FirstName VARCHAR(255),                    -- User's name
+    FirstName VARCHAR(255),               -- Users name
     LastName VARCHAR(255),       
-    Email VARCHAR(255),                   -- User's email
-    Phone VARCHAR(255)                    -- User's phone number
+    Email VARCHAR(255),                   -- Users email
+    Phone VARCHAR(255),                   -- Users phone number
+    Password VARCHAR(255)
 );
 
 -- Create the Borrowing table

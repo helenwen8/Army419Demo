@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" media="all" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
+    <title>User Profile</title>
+</head>
+<body>
+    <div id="container">
+        <nav>
+            <div class="navbar-title">
+                <p>P I N E C O N E</p>
+            </div>
+            <ul>
+                <li><a href="{{ url_for('index') }}">Loaned Items</a></li>
+                <li><a href="{{ url_for('borrowedItems') }}">Borrowed Items</a></li>
+            </ul>
+            <div class="profile-section">
+                <span class="profile-name">{{ user['FirstName'] }} {{ user['LastName'] }}</span>
+                <div class="profile-picture">
+                    <img src="{{ url_for('static', filename='images/profile.png') }}" alt="Profile Picture">
+                </div>
+            </div>
+        </nav>
+
+        <h1>User Profile</h1>
+        <div class="profile-details">
+            <p><strong>Name:</strong> {{ user['FirstName'] }} {{ user['LastName'] }}</p>
+            <p><strong>Email:</strong> {{ user['Email'] }}</p>
+            <p><strong>Phone:</strong> {{ user['Phone'] }}</p>
+            <p><strong>DODID:</strong> {{ user['DODID'] }}</p>
+        </div>
+    </div>
+</body>
+</html>

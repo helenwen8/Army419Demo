@@ -1,7 +1,15 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template, redirect, url_for, session
+from flask_bcrypt import Bcrypt
+from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 import sqlite3
 
+
 app = Flask(__name__)
+app.secret_key = "supersecretkey"
+bcrypt = Bcrypt(app)
+login_manager = LoginManager(app)
+login_manager.login_view = "login"
+
 
 def get_db_connection():
     conn = sqlite3.connect("pinecone.db")
@@ -111,6 +119,105 @@ def get_all_borrowed():
     supplies = [dict(row) for row in rows]
 
     return jsonify(supplies), 200
+
+class User(UserMixin):
+    def __init__(self, id, first_name, last_name, email):
+        self.id = id
+        self.first_name = first_name
+        self.last_name = last_name
+        self.email = email
+
+@login_manager.user_loader
+def load_user(user_id):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM User WHERE DODID = ?", (user_id,))
+    user_data = cursor.fetchone()
+    conn.close()
+    if user_data:
+        return User(user_data["DODID"], user_data["FirstName"], user_data["LastName"], user_data["Email"])
+    return None
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM User WHERE Email = ?", (email,))
+        user = cursor.fetchone()
+        conn.close()
+
+        if user and bcrypt.check_password_hash(user["Password"], password):
+            user_obj = User(user["DODID"], user["FirstName"], user["LastName"], user["Email"])
+            login_user(user_obj)
+            return redirect(url_for('index'))
+        else:
+            return "Invalid credentials", 401
+
+    return render_template('login.html')
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('login'))
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        dodid = request.form['dodid']
+        first_name = request.form['first_name']
+        last_name = request.form['last_name']
+        email = request.form['email']
+        phone = request.form['phone']
+        password = request.form['password']
+
+        # Validate that DODID and email are unique
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM User WHERE DODID = ? OR Email = ?", (dodid, email))
+        existing_user = cursor.fetchone()
+
+        if existing_user:
+            conn.close()
+            return "DODID or Email is already registered", 400
+
+        # Hash the password
+        hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+
+        # Insert the new user into the database
+        cursor.execute(
+            "INSERT INTO User (DODID, FirstName, LastName, Email, Phone, Password) VALUES (?, ?, ?, ?, ?, ?)",
+            (dodid, first_name, last_name, email, phone, hashed_password)
+        )
+        conn.commit()
+        conn.close()
+
+        return redirect(url_for('login'))
+
+    return render_template('register.html')
+
+
+@app.route('/profile/<user_id>')
+@login_required
+def profile(user_id):
+    if user_id != current_user.id:
+        return "Unauthorized", 403
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM User WHERE DODID = ?", (user_id,))
+    user = cursor.fetchone()
+    conn.close()
+
+    if user:
+        return render_template('profile.html', user=dict(user))
+    else:
+        return "User not found", 404
+
 
 if __name__ == "__main__":
     app.run(debug=True)
