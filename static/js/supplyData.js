@@ -78,6 +78,7 @@ function fetchBorrowedItems(loggedInUserDODID) {
     fetch(`/api/supply/borrowing?userid=${loggedInUserDODID}`)
         .then(response => response.json())
         .then(data => {
+            console.log(loggedInUserDODID)
             const supplyTableBody = document.getElementById("supplyTable").querySelector("tbody");
             supplyTableBody.innerHTML = ""; // Clear the table before adding new data
 

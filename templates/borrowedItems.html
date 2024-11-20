@@ -56,7 +56,8 @@
     
         <script src="{{ url_for('static', filename='js/supplyData.js') }}"></script>
         <script>
-            fetchBorrowedItems(); // For the Borrowed Items page
+            const loggedInUserDODID = "{{ current_user.id }}";
+            fetchBorrowedItems(loggedInUserDODID); // For the Borrowed Items page
         </script>
 
     </div>

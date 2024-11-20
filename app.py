@@ -139,6 +139,7 @@ def get_all_loaned():
 @app.route('/api/supply/borrowing', methods=['GET'])
 def get_all_borrowed():
     user_id = request.args.get("userid")
+    print(user_id)
 
     query = """
     SELECT u1.DODID, u1.LastName, u1.FirstName, s.NSN, s.Name, s.Serial_Num, b.Count, b.Checkout_Date, b.Last_Renewed_Date
