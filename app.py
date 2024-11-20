@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify, render_template, redirect, url_for, s
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 import sqlite3
+from datetime import datetime
 
 
 app = Flask(__name__)
@@ -117,7 +118,7 @@ def get_all_loaned():
     print(user_id)
 
     query = """
-    SELECT u2.DODID, u2.LastName, u2.FirstName, s.NSN, s.Name, s.Serial_Num, b.Count, b.Checkout_Date, b.Last_Renewed_Date
+    SELECT b.Borrowing_ID, u2.DODID, u2.LastName, u2.FirstName, s.NSN, s.Name, s.Serial_Num, b.Count, b.Checkout_Date, b.Last_Renewed_Date
     FROM Supply as s
     JOIN Borrowing AS b ON s.ID = b.Item_ID
     JOIN User AS u1 ON b.Lender_DODID = u1.DODID
@@ -254,6 +255,42 @@ def profile(user_id):
         return render_template('profile.html', user=dict(user))
     else:
         return "User not found", 404
+
+@app.route('/api/supply/renew', methods=['POST'])
+def renew_item():
+    data = request.json
+    borrowing_id = data.get("borrowing_id")
+    initials = data.get("initials")
+    print(data)
+
+    if not borrowing_id or not initials:
+        return jsonify({"success": False, "message": "Borrowing ID and initials are required."}), 400
+
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        # Update the Last_Renewed_Date in the Borrowing table
+        current_datetime = datetime.now().strftime("%Y-%m-%dT%H:%M")
+        cursor.execute(
+            """
+            UPDATE Borrowing
+            SET Last_Renewed_Date = ?, Borrower_Initials = ?
+            WHERE Borrowing_ID = ?
+            """,
+            (current_datetime, initials, borrowing_id)
+        )
+        conn.commit()
+        conn.close()
+
+        if cursor.rowcount == 0:
+            return jsonify({"success": False, "message": "No matching borrowing record found."}), 404
+
+        return jsonify({"success": True, "message": "Borrowing record successfully renewed."}), 200
+
+    except Exception as e:
+        print(f"Error renewing borrowing record: {e}")
+        return jsonify({"success": False, "message": "Internal server error."}), 500
 
 
 if __name__ == "__main__":

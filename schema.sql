@@ -24,6 +24,7 @@ CREATE TABLE User (
 
 -- Create the Borrowing table
 CREATE TABLE Borrowing (
+    Borrowing_ID INTEGER PRIMARY KEY AUTOINCREMENT,  -- New unique identifier
     Item_ID VARCHAR(255),                 -- References Item_UUID in the Supply table
     Lender_DODID VARCHAR(255),            -- References DODID in the User table for the lender
     Borrower_DODID VARCHAR(255),          -- References DODID in the User table for the borrower
