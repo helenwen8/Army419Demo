@@ -1,6 +1,6 @@
-const loggedInUserDODID = "{{ current_user.id }}";
-function fetchLoanedItems() {
-    fetch("/api/supply/loaned?userid=${loggedInUserDODID}")
+// const loggedInUserDODID = "{{ current_user.id }}";
+function fetchLoanedItems(loggedInUserDODID) {
+    fetch(`/api/supply/loaned?userid=${loggedInUserDODID}`)
         .then(response => response.json())
         .then(data => {
             const supplyTableBody = document.getElementById("supplyTable").querySelector("tbody");
@@ -18,13 +18,50 @@ function fetchLoanedItems() {
                     <td>${item.Count || ""}</td>
                     <td>${item.Checkout_Date || ""}</td>
                     <td>${item.Last_Renewed_Date || ""}</td>
-                    <td></td>
+                    <td>
+                        <input type="text" placeholder="Initials" id="renew-initials-${item.Serial_Num}" />
+                        <button onclick="renewItem('${item.Serial_Num}')">Renew</button>
+                    </td>
                 `;
                 supplyTableBody.appendChild(row);
             });
         })
         .catch(error => {
             console.error("Error fetching loaned items:", error);
+        });
+}
+
+function renewItem(serialNum) {
+    const initialsInput = document.getElementById(`renew-initials-${serialNum}`);
+    const initials = initialsInput.value.trim();
+
+    if (!initials) {
+        alert("Please enter your initials.");
+        return;
+    }
+
+    fetch(`/api/supply/renew`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            serial_num: serialNum,
+            initials: initials
+        })
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert("Item successfully renewed.");
+                fetchLoanedItems(); // Refresh the table
+            } else {
+                alert(data.message || "Failed to renew the item.");
+            }
+        })
+        .catch(error => {
+            console.error("Error renewing item:", error);
+            alert("An error occurred while renewing the item.");
         });
 }
 

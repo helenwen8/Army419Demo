@@ -29,33 +29,82 @@
     </nav>
 
     <h1>New Loan</h1>
-    <form id="supplyForm">
+    <form id="supplyForm" onsubmit="submitForm(event)">
         <label for="item">Item:</label>
         <div class="dropdown-container">
-            <input type="text" id="item-search" class="dropdown-input" placeholder="Search items..." oninput="debouncedItemFetch()" />
+            <input type="text" id="item-search" class="dropdown-input" placeholder="Search items..." />
             <div id="item-options" class="dropdown-options"></div>
         </div>
-
+    
         <label for="borrower">Borrower:</label>
         <div class="dropdown-container">
-            <input type="text" id="borrower-search" class="dropdown-input" placeholder="Search borrowers..." oninput="debouncedBorrowerFetch()" />
+            <input type="text" id="borrower-search" class="dropdown-input" placeholder="Search borrowers..." />
             <div id="borrower-options" class="dropdown-options"></div>
         </div>
-
+    
         <label for="count">Count:</label>
         <input type="number" id="count" name="Count" min="1" required>
-
+    
         <label for="date">Checkout Date:</label>
         <input type="datetime-local" id="date" name="Date" required>
 
+        <label for="reason">Reason:</label>
+        <textarea id="reason" name="Reason" placeholder="Enter the reason for borrowing..."></textarea>
+
+    
         <label for="initials">Borrower's Initials:</label>
         <input type="text" id="initials" name="Initials" required>
-
-        <button type="button" onclick="submitForm()">Loan Item</button>
+    
+        <button type="submit">Load Item</button>
     </form>
-
+    
     <p id="responseMessage"></p>
 
 </body>
 <script src="{{ url_for('static', filename='js/newBorrow.js') }}"></script>
+<script>
+    const lenderDODID = "{{ current_user.id }}";
+    console.log("Lender DOD ID:", lenderDODID);
+    function submitForm(event) {
+        event.preventDefault();
+        const item = document.getElementById("item-search").getAttribute("data-id"); 
+        const borrower = document.getElementById("borrower-search").getAttribute("data-id");
+        const count = document.getElementById("count").value;
+        const date = document.getElementById("date").value;
+        const initials = document.getElementById("initials").value;
+        console.log(item, borrower)
+
+        if (!item || !borrower || !count || !date || !initials) {
+            document.getElementById("responseMessage").innerText = "All fields are required.";
+            return;
+        }
+
+        const data = {
+            item: item,
+            lender: lenderDODID,
+            borrower: borrower,
+            count: parseInt(count),
+            reason: document.getElementById("reason").value,
+            date: date,
+            initials: initials
+        };
+
+        fetch("/api/borrow", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data)
+        })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("responseMessage").innerText = data.message;
+                document.getElementById("supplyForm").reset();
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                document.getElementById("responseMessage").innerText = "An error occurred.";
+            });
+    }
+</script>
+
+
 </html>

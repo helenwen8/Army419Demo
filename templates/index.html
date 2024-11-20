@@ -51,7 +51,7 @@
                         <th>Count</th>
                         <th>Checkout Date</th>
                         <th>Last Renewed Date</th>
-                        <th>Return Date</th>
+                        <th>Renew</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -62,7 +62,9 @@
     
         <script src="{{ url_for('static', filename='js/supplyData.js') }}"></script>
         <script>
-            fetchLoanedItems(); // For the Loaned Items page
+            const loggedInUserDODID = "{{ current_user.id }}";
+            fetchLoanedItems(loggedInUserDODID); // For the Loaned Items page
+            console.log(loggedInUserDODID)
         </script>
     </div>
 </body>

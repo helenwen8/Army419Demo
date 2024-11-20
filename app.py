@@ -71,15 +71,20 @@ def get_supply():
     return jsonify(supplies), 200
 
 
+# app.run(debug=True)
+
 @app.route('/api/borrow', methods=['POST'])
 def add_borrow():
+    print(f"Current user ID: {current_user.id}")
     data = request.json
+    print(f"Received data: {data}")
     item = data.get("item")
     lender = data.get("lender")
     borrower = data.get("borrower")
     count = data.get("count")
     reason = data.get("reason")
     date = data.get("date")
+    # date = None
     initials = data.get("initials")
 
     conn = get_db_connection()
@@ -109,6 +114,7 @@ def get_users():
 @app.route('/api/supply/loaned', methods=['GET'])
 def get_all_loaned():
     user_id = request.args.get("userid")
+    print(user_id)
 
     query = """
     SELECT u2.DODID, u2.LastName, u2.FirstName, s.NSN, s.Name, s.Serial_Num, b.Count, b.Checkout_Date, b.Last_Renewed_Date
@@ -121,8 +127,9 @@ def get_all_loaned():
 
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute(query, (user_id,))
+    cursor.execute(query, (str(user_id),))
     rows = cursor.fetchall()
+    print(rows)
     conn.close()
     supplies = [dict(row) for row in rows]
 

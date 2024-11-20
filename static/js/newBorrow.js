@@ -1,6 +1,6 @@
 const apiItemURL = "/api/supplybyidentifier";
 const apiBorrowerURL = "/api/users";
-const lenderDODID = "{{ current_user.id }}"; // Injected from Flask
+// const lender = lenderDODID; // Injected from Flask
 let debounceTimeout;
 
 // Function to fetch dropdown data
@@ -34,7 +34,7 @@ function renderOptions(data, optionsDiv) {
             option.textContent = `Serial: ${item.Serial_Num}`;
         }
 
-        option.setAttribute("data-id", item.id || item.DODID); // Store ID/DODID
+        option.setAttribute("data-id", item.ID || item.DODID); // Store ID/DODID
         option.onclick = () => selectOption(option, optionsDiv.parentElement.querySelector("input"));
         optionsDiv.appendChild(option);
     });
@@ -63,10 +63,13 @@ function debouncedBorrowerFetch() {
 
 // Handle option selection
 function selectOption(option, inputField) {
-    inputField.value = option.textContent; // Set selected value in input
-    inputField.setAttribute("data-id", option.getAttribute("data-id")); // Store selected ID
-    inputField.parentElement.querySelector(".dropdown-options").classList.remove("show");
+    inputField.value = option.textContent; // Set the display text in the input
+    inputField.setAttribute("data-id", option.getAttribute("data-id")); // Store the actual ID in data-id
+    console.log(option.getAttribute("data-id"))
+    inputField.parentElement.querySelector(".dropdown-options").classList.remove("show"); // Hide the dropdown
 }
+
+
 
 // Toggle dropdown visibility
 function toggleDropdown(show, optionsDivId) {
@@ -79,38 +82,45 @@ function toggleDropdown(show, optionsDivId) {
 }
 
 // Submit form data
-function submitForm() {
-    const item = document.getElementById("item-search").value;
-    const borrower = document.getElementById("borrower-search").value;
-    const count = document.getElementById("count").value;
-    const date = document.getElementById("date").value;
-    const initials = document.getElementById("initials").value;
+// function submitForm(event) {
+//     event.preventDefault();
+//     const item = document.getElementById("item-search").value;
+//     const borrower = document.getElementById("borrower-search").value;
+//     const count = document.getElementById("count").value;
+//     const date = document.getElementById("date").value;
+//     const initials = document.getElementById("initials").value;
+//     console.log(item, borrower)
 
-    const data = {
-        item: item,
-        lender: lenderDODID,
-        borrower: borrower,
-        count: parseInt(count),
-        reason: document.getElementById("reason").value,
-        date: date,
-        initials: initials
-    };
+//     if (!item || !borrower || !count || !date || !initials) {
+//         document.getElementById("responseMessage").innerText = "All fields are required.";
+//         return;
+//     }
 
-    fetch("/api/borrow", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data)
-    })
-        .then(response => response.json())
-        .then(data => {
-            document.getElementById("responseMessage").innerText = data.message;
-            document.getElementById("supplyForm").reset();
-        })
-        .catch(error => {
-            console.error("Error:", error);
-            document.getElementById("responseMessage").innerText = "An error occurred.";
-        });
-}
+//     const data = {
+//         item: item,
+//         lender: lender,
+//         borrower: borrower,
+//         count: parseInt(count),
+//         reason: document.getElementById("reason").value,
+//         date: date,
+//         initials: initials
+//     };
+
+//     fetch("/api/borrow", {
+//         method: "POST",
+//         headers: { "Content-Type": "application/json" },
+//         body: JSON.stringify(data)
+//     })
+//         .then(response => response.json())
+//         .then(data => {
+//             document.getElementById("responseMessage").innerText = data.message;
+//             document.getElementById("supplyForm").reset();
+//         })
+//         .catch(error => {
+//             console.error("Error:", error);
+//             document.getElementById("responseMessage").innerText = "An error occurred.";
+//         });
+// }
 
 // Attach events
 window.onload = () => {

@@ -32,7 +32,7 @@ CREATE TABLE Borrowing (
     Checkout_Date VARCHAR(255),           -- Date of checkout
     Last_Renewed_Date VARCHAR(255),       -- Date of last renewal
     Borrower_Initials VARCHAR(255),       -- Initials of the borrower
-    FOREIGN KEY (Item_ID) REFERENCES Supply (Item_UUID),
+    FOREIGN KEY (Item_ID) REFERENCES Supply (ID),
     FOREIGN KEY (Lender_DODID) REFERENCES User (DODID),
     FOREIGN KEY (Borrower_DODID) REFERENCES User (DODID)
 );
