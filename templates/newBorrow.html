@@ -1,10 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Item to Supply</title> -->
     <link rel="stylesheet" media="all" type="text/css" href="{{ url_for('static',filename='css/styles.css') }}">
+    <title>New Loan</title>
 </head>
 <body>
     <nav>
@@ -34,163 +32,30 @@
     <form id="supplyForm">
         <label for="item">Item:</label>
         <div class="dropdown-container">
-            <!-- Input field for searching -->
-            <input type="text" id="dropdown-search" class="dropdown-input" placeholder="Search..." oninput="filterOptions()" />
-    
-            <!-- Dropdown options -->
-            <div id="dropdown-options" class="dropdown-options">
-                <!-- Options will be dynamically added here -->
-            </div>
+            <input type="text" id="item-search" class="dropdown-input" placeholder="Search items..." oninput="debouncedItemFetch()" />
+            <div id="item-options" class="dropdown-options"></div>
         </div>
 
         <label for="borrower">Borrower:</label>
-        <input type="text" id="borrower" name="Borrower" required>
+        <div class="dropdown-container">
+            <input type="text" id="borrower-search" class="dropdown-input" placeholder="Search borrowers..." oninput="debouncedBorrowerFetch()" />
+            <div id="borrower-options" class="dropdown-options"></div>
+        </div>
 
         <label for="count">Count:</label>
-        <input type="text" id="count" name="Count">
-
-        <label for="reason">Reason:</label>
-        <input type="text" id="reason" name="Reason">
+        <input type="number" id="count" name="Count" min="1" required>
 
         <label for="date">Checkout Date:</label>
-        <input type="text" id="date" name="Date">
+        <input type="datetime-local" id="date" name="Date" required>
 
-        <label for="initials">Borrowers Initials:</label>
-        <input type="text" id="initials" name="Initials">
+        <label for="initials">Borrower's Initials:</label>
+        <input type="text" id="initials" name="Initials" required>
 
         <button type="button" onclick="submitForm()">Loan Item</button>
     </form>
 
-    <script>
-        const apiURL = "/api/supplybyidentifier";
-        let items = [];
-        let debounceTimeout;
-
-        async function fetchDropdownData(identifier) {
-            try {
-                const response = await fetch(`${apiURL}?identifier=${identifier}`);
-                const data = await response.json();
-                items = data; // Store the fetched items
-                renderOptions(items); // Display all items in the dropdown
-            } catch (error) {
-                console.error('Error fetching data:', error);
-                // Handle error and show a message to the user
-                const optionsDiv = document.getElementById('dropdown-options');
-                optionsDiv.innerHTML = '<div class="dropdown-option">Failed to load options</div>';
-            }
-        }
-
-        // Function to render options in the dropdown
-        function renderOptions(data) {
-            const optionsDiv = document.getElementById('dropdown-options');
-            optionsDiv.innerHTML = ''; // Clear existing options
-            data.forEach(item => {
-                const option = document.createElement('div');
-                option.classList.add('dropdown-option');
-
-                if (item.Name != null) {
-                    option.textContent = "Name: " + item.Name;
-                } else if (item.NSN != null) {
-                    option.textContent = "NSN: " + item.NSN;
-                } else {
-                    option.textContent = "Serial: " + item.Serial_Num;
-                }
-
-                 // Assuming the API returns a 'name' field
-                option.setAttribute('data-id', item.id); // Store the item's id in a custom data attribute
-                option.onclick = () => selectOption(item); // Handle selection
-                optionsDiv.appendChild(option);
-            });
-        }
-
-        // Function to filter options based on search input and fetch new data
-        function debouncedFetch() {
-            const searchQuery = document.getElementById('dropdown-search').value;
-
-            // Clear any existing debounce timeout
-            clearTimeout(debounceTimeout);
-
-            // Set a new debounce timeout to trigger fetch after 300ms
-            debounceTimeout = setTimeout(() => {
-                fetchDropdownData(searchQuery); // Fetch new data based on search query
-            }, 300);
-        }
-
-         // Function to handle selection of an option
-         function selectOption(item) {
-            const inputField = document.getElementById('dropdown-search');
-            inputField.value = item.ID; // Set the selected option in the input field
-            toggleDropdown(false); // Hide the options dropdown
-        }
-
-        // Function to toggle the visibility of the dropdown
-        function toggleDropdown(show) {
-            const optionsDiv = document.getElementById('dropdown-options');
-            if (show) {
-                optionsDiv.classList.add('show');
-            } else {
-                optionsDiv.classList.remove('show');
-            }
-        }
-
-        // Close the dropdown if the user clicks outside of it
-        window.addEventListener('click', (event) => {
-            const dropdownContainer = document.querySelector('.dropdown-container');
-            if (!dropdownContainer.contains(event.target)) {
-                toggleDropdown(false);
-            }
-        });
-
-        // Open the dropdown when the input field is focused
-        document.getElementById('dropdown-search').addEventListener('focus', () => {
-            toggleDropdown(true);
-        });
-
-        document.getElementById('dropdown-search').addEventListener('input', debouncedFetch);
-
-        // Fetch the initial data when the page loads
-        window.onload = () => fetchDropdownData('');
-
-
-
-
-
-        function submitForm() {
-            const item = document.getElementById("dropdown-search").value;
-            const borrower = document.getElementById("borrower").value;
-            const count = document.getElementById("count").value;
-            const reason = document.getElementById("reason").value;
-            const date = document.getElementById("date").value;
-            const initials = document.getElementById("initials").value;
-
-            const data = { 
-                item: item, 
-                lender: "6028029736", 
-                borrower: borrower, 
-                count: count, 
-                reason: reason, 
-                date: date,
-                initials: initials
-            };
-
-            fetch("/api/borrow", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(data)
-            })
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById("responseMessage").innerText = data.message;
-                document.getElementById("supplyForm").reset();
-            })
-            .catch(error => {
-                console.error("Error:", error);
-                document.getElementById("responseMessage").innerText = "An error occurred.";
-            });
-        }
-    </script>
-
     <p id="responseMessage"></p>
+
 </body>
+<script src="{{ url_for('static', filename='js/newBorrow.js') }}"></script>
+</html>

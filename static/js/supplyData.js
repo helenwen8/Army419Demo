@@ -1,5 +1,6 @@
+const loggedInUserDODID = "{{ current_user.id }}";
 function fetchLoanedItems() {
-    fetch("/api/supply/loaned?userid=6028029736")
+    fetch("/api/supply/loaned?userid=${loggedInUserDODID}")
         .then(response => response.json())
         .then(data => {
             const supplyTableBody = document.getElementById("supplyTable").querySelector("tbody");
@@ -28,7 +29,7 @@ function fetchLoanedItems() {
 }
 
 function fetchBorrowedItems() {
-    fetch("/api/supply/borrowing?userid=6028029736")
+    fetch("/api/supply/borrowing?userid=${loggedInUserDODID}")
         .then(response => response.json())
         .then(data => {
             const supplyTableBody = document.getElementById("supplyTable").querySelector("tbody");

@@ -53,12 +53,12 @@ def add_supply():
 
 @app.route('/api/supplybyidentifier', methods=['GET'])
 def get_supply():
-    identifier = request.args.get("identifier") + "%"
+    identifier = request.args.get("identifier", "") + "%"  # Default to an empty string if 'identifier' is not provided
 
     query = """
     SELECT ID, NSN, Name, Serial_Num, Description
     FROM Supply
-    WHERE NSN LIKE ? or Name LIKE ? or Serial_Num LIKE ?
+    WHERE NSN LIKE ? OR Name LIKE ? OR Serial_Num LIKE ?
     """
 
     conn = get_db_connection()
@@ -69,6 +69,7 @@ def get_supply():
     supplies = [dict(row) for row in rows]
 
     return jsonify(supplies), 200
+
 
 @app.route('/api/borrow', methods=['POST'])
 def add_borrow():
@@ -93,6 +94,16 @@ def add_borrow():
     conn.close()
 
     return jsonify({"message": "Item added to Borrowing table"}), 201
+
+@app.route('/api/users', methods=['GET'])
+def get_users():
+    query = request.args.get("query", "")
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT DODID, FirstName, LastName FROM User WHERE DODID LIKE ?", (f"%{query}%",))
+    users = [dict(row) for row in cursor.fetchall()]
+    conn.close()
+    return jsonify(users), 200
 
 
 @app.route('/api/supply/loaned', methods=['GET'])
