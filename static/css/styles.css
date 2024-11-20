@@ -158,3 +158,63 @@ th {
 .dropdown-options.show {
     display: block;
 }
+
+/* Profile Page Styles */
+.profile-header h1 {
+    text-align: center;
+    color: #333;
+    margin-top: 20px;
+}
+
+.profile-details-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 30px;
+}
+
+.profile-card {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 50%;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.profile-card-picture {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 20px;
+    border: 3px solid #6B7682;
+}
+
+.profile-card-info p {
+    margin: 10px 0;
+    font-size: 16px;
+    color: #555;
+}
+
+.profile-card-info strong {
+    color: #333;
+}
+
+.logout-button {
+    color: #fff;
+    background-color: #6B7682;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    margin-left: 15px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.logout-button:hover {
+    background-color: #333;
+}

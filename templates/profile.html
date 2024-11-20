@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="stylesheet" media="all" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     <title>User Profile</title>
 </head>
 <body>
@@ -29,13 +29,22 @@
             </div>
         </nav>
 
-        <h1>User Profile</h1>
-        <div class="profile-details">
-            <p><strong>Name:</strong> {{ user['FirstName'] }} {{ user['LastName'] }}</p>
-            <p><strong>Email:</strong> {{ user['Email'] }}</p>
-            <p><strong>Phone:</strong> {{ user['Phone'] }}</p>
-            <p><strong>DODID:</strong> {{ user['DODID'] }}</p>
-        </div>
+        <main>
+            <div class="profile-header">
+                <h1>User Profile</h1>
+            </div>
+            <div class="profile-details-container">
+                <div class="profile-card">
+                    <img src="{{ url_for('static', filename='images/profile.png') }}" alt="Profile Picture" class="profile-card-picture">
+                    <div class="profile-card-info">
+                        <p><strong>Name:</strong> {{ user['FirstName'] }} {{ user['LastName'] }}</p>
+                        <p><strong>Email:</strong> {{ user['Email'] }}</p>
+                        <p><strong>Phone:</strong> {{ user['Phone'] }}</p>
+                        <p><strong>DODID:</strong> {{ user['DODID'] }}</p>
+                    </div>
+                </div>
+            </div>
+        </main>
     </div>
 </body>
 </html>
