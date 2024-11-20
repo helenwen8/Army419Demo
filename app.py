@@ -51,6 +51,25 @@ def add_supply():
 
     return jsonify({"message": "Item added to Supply table"}), 201
 
+@app.route('/api/supplybyidentifier', methods=['GET'])
+def get_supply():
+    identifier = request.args.get("identifier") + "%"
+
+    query = """
+    SELECT ID, NSN, Name, Serial_Num, Description
+    FROM Supply
+    WHERE NSN LIKE ? or Name LIKE ? or Serial_Num LIKE ?
+    """
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute(query, (identifier, identifier, identifier))
+    rows = cursor.fetchall()
+    conn.close()
+    supplies = [dict(row) for row in rows]
+
+    return jsonify(supplies), 200
+
 @app.route('/api/borrow', methods=['POST'])
 def add_borrow():
     data = request.json

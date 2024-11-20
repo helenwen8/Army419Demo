@@ -24,6 +24,7 @@
                             <img src="{{ url_for('static', filename='images/profile.png') }}" alt="Profile Picture">
                         </div>
                     </a>
+                    <a href="{{ url_for('logout') }}" class="logout-button">Logout</a>
                 {% else %}
                     <a href="{{ url_for('login') }}">Login</a> | <a href="{{ url_for('register') }}">Register</a>
                 {% endif %}
