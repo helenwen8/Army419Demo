@@ -115,20 +115,26 @@ def get_users():
 @app.route('/api/supply/loaned', methods=['GET'])
 def get_all_loaned():
     user_id = request.args.get("userid")
+    data = request.json
+    print(f"Received data: {data}")
     print(user_id)
 
+    sort_column = request.args.get("column", "borrowID")
+    sort_order = request.args.get("order", "asc")
+
     query = """
-    SELECT b.Borrowing_ID, u2.DODID, u2.LastName, u2.FirstName, s.NSN, s.Name, s.Serial_Num, b.Count, b.Checkout_Date, b.Last_Renewed_Date
+    SELECT b.Borrowing_ID as borrowID, u2.DODID, u2.LastName, u2.FirstName, s.NSN, s.Name, s.Serial_Num, b.Count, b.Checkout_Date, b.Last_Renewed_Date
     FROM Supply as s
     JOIN Borrowing AS b ON s.ID = b.Item_ID
     JOIN User AS u1 ON b.Lender_DODID = u1.DODID
     JOIN User AS u2 ON b.Borrower_DODID = u2.DODID
     WHERE u1.DODID = ?
-    """
+    ORDER BY ? ?
+    """ 
 
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute(query, (str(user_id),))
+    cursor.execute(query, (str(user_id),sort_column, sort_order))
     rows = cursor.fetchall()
     print(rows)
     conn.close()

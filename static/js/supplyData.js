@@ -1,6 +1,7 @@
 // const loggedInUserDODID = "{{ current_user.id }}";
-function fetchLoanedItems(loggedInUserDODID) {
-    fetch(`/api/supply/loaned?userid=${loggedInUserDODID}`)
+
+function fetchLoanedItems(loggedInUserDODID, sort="", order="") {
+    fetch(`/api/supply/loaned?userid=${loggedInUserDODID}&sort=${sort}&order=${order}`)
         .then(response => response.json())
         .then(data => {
             console.log(data)
@@ -74,8 +75,8 @@ function renewItem(borrowingId, loggedInUserDODID) {
 }
 
 
-function fetchBorrowedItems(loggedInUserDODID) {
-    fetch(`/api/supply/borrowing?userid=${loggedInUserDODID}`)
+function fetchBorrowedItems(loggedInUserDODID,sort="", order="") {
+    fetch(`/api/supply/borrowing?userid=${loggedInUserDODID}&sort=${sort}&order=${order}`)
         .then(response => response.json())
         .then(data => {
             console.log(loggedInUserDODID)
@@ -102,4 +103,19 @@ function fetchBorrowedItems(loggedInUserDODID) {
         .catch(error => {
             console.error("Error fetching borrowed items:", error);
         });
+}
+
+
+function sortTable(header) {
+    const column = header.getAttribute("column");
+    const currentOrder = header.className;
+    console.log(column);
+    console.log(currentOrder);
+    const newOrder = currentOrder === "sort-asc" ? "desc" : "asc";
+
+    // Update order attribute
+    header.className = "sort-" + newOrder;
+
+    // Fetch sorted data
+    fetchBorrowedItems(loggedInUserDODID, column, newOrder);
 }

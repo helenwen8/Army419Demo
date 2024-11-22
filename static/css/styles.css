@@ -218,3 +218,11 @@ th {
 .logout-button:hover {
     background-color: #333;
 }
+
+.sort-asc:before {
+    content: "\25B4";
+}
+
+.sort-dsc:before {
+    content: "\25BE";
+}
