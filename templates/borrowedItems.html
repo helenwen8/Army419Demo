@@ -36,14 +36,14 @@
             <table id="supplyTable">
                 <thead>
                     <tr>
-                        <th class='sort-asc' column="last_name" onclick="sortTable(this)">Loaner Last Name </th>
-                        <th>Loaner First Name</th>
+                        <th column="LastName" onclick="sortBorrowedTable(this)">Loaner Last Name </th>
+                        <th column="FirstName" onclick="sortBorrowedTable(this)">Loaner First Name</th>
                         <th>Loaner DODID</th>
                         <th>Item NSN</th>
-                        <th>Item Name</th>
+                        <th column="Name" onclick="sortBorrowedTable(this)">Item Name</th>
                         <th>Item Serial Number</th>
-                        <th>Count</th>
-                        <th>Checkout Date</th>
+                        <th column="Count" onclick="sortBorrowedTable(this)">Count</th>
+                        <th column="Checkout_Date" onclick="sortBorrowedTable(this)">Checkout Date</th>
                         <th>Last Renewed Date</th>
                         <th>Return Date</th>
                     </tr>

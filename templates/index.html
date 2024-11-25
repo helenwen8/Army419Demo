@@ -43,14 +43,14 @@
             <table id="supplyTable">
                 <thead>
                     <tr>
-                        <th>Borrower Last Name</th>
-                        <th>Borrower First Name</th>
+                        <th column="LastName" onclick="sortLoanedTable(this)">Borrower Last Name</th>
+                        <th column="FirstName" onclick="sortLoanedTable(this)">Borrower First Name</th>
                         <th>Borrower DODID</th>
                         <th>Item NSN</th>
-                        <th>Item Name</th>
+                        <th column="Name" onclick="sortLoanedTable(this)">Item Name</th>
                         <th>Item Serial Number</th>
-                        <th>Count</th>
-                        <th>Checkout Date</th>
+                        <th column="Count" onclick="sortLoanedTable(this)">Count</th>
+                        <th column="Checkout_Date" onclick="sortLoanedTable(this)">Checkout Date</th>
                         <th>Last Renewed Date</th>
                         <th>Due Date</th>
                         <th>Return Date</th>

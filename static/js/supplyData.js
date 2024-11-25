@@ -1,6 +1,6 @@
 // const loggedInUserDODID = "{{ current_user.id }}";
 
-function fetchLoanedItems(loggedInUserDODID, sort="", order="") {
+function fetchLoanedItems(loggedInUserDODID, sort="borrowID", order="asc") {
     fetch(`/api/supply/loaned?userid=${loggedInUserDODID}&sort=${sort}&order=${order}`)
         .then(response => response.json())
         .then(data => {
@@ -21,11 +21,9 @@ function fetchLoanedItems(loggedInUserDODID, sort="", order="") {
                     <td>${item.Count || ""}</td>
                     <td>${item.Checkout_Date || ""}</td>
                     <td>${item.Last_Renewed_Date || ""}</td>
-                    <td>${item.Due_Date || ""}</td>
-                    <td>${item.Returned_Date || ""}</td>
                     <td>
-                        <input type="text" placeholder="Initials" id="renew-initials-${item.borrowID}" />
-                        <button onclick="renewItem('${item.borrowID}', '${loggedInUserDODID}')">Renew</button>
+                        <input type="text" placeholder="Initials" id="renew-initials-${item.Borrowing_ID}" />
+                        <button onclick="renewItem('${item.Borrowing_ID}', '${loggedInUserDODID}')">Renew</button>
                     </td>
                 `;
                 supplyTableBody.appendChild(row);
@@ -77,7 +75,7 @@ function renewItem(borrowingId, loggedInUserDODID) {
 }
 
 
-function fetchBorrowedItems(loggedInUserDODID,sort="", order="") {
+function fetchBorrowedItems(loggedInUserDODID, sort="borrowID", order="asc") {
     fetch(`/api/supply/borrowing?userid=${loggedInUserDODID}&sort=${sort}&order=${order}`)
         .then(response => response.json())
         .then(data => {
@@ -107,16 +105,33 @@ function fetchBorrowedItems(loggedInUserDODID,sort="", order="") {
         });
 }
 
-
-function sortTable(header) {
+function sortTableHelper(header) {
     const column = header.getAttribute("column");
-    const currentOrder = header.className;
     console.log(column);
-    console.log(currentOrder);
+    const currentOrder = header.className;
+    // if descending OR none, flip to ascending
     const newOrder = currentOrder === "sort-asc" ? "desc" : "asc";
 
-    // Update order attribute
-    header.className = "sort-" + newOrder;
+    // make all table headers NONE
+    header.parentNode.childNodes.forEach(sibling => {sibling.className = ""});
+
+    // Update order attribute for the current selected column
+    header.className = "sort-".concat(newOrder);
+    console.log(header.className);
+
+    // return items needed to sort
+    return [column, newOrder];
+}
+
+function sortLoanedTable(header) {
+    let [column, newOrder] = sortTableHelper(header);
+
+    // Fetch sorted data
+    fetchLoanedItems(loggedInUserDODID, column, newOrder);
+}
+
+function sortBorrowedTable(header) {
+    let [column, newOrder] = sortTableHelper(header);
 
     // Fetch sorted data
     fetchBorrowedItems(loggedInUserDODID, column, newOrder);

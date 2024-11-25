@@ -129,11 +129,12 @@ def get_users():
 def get_all_loaned():
     user_id = request.args.get("userid")
 
-    sort_column = request.args.get("column", "borrowID")
-    sort_order = request.args.get("order", "asc")
+    # default ORDER BY borrowID ASC, implemented in supplyData.js
+    sort_column = request.args.get("sort")
+    sort_order = request.args.get("order")
 
     query = f"""
-    SELECT b.Borrowing_ID as borrowID, u2.DODID, u2.LastName, u2.FirstName, s.NSN, s.Name, s.Serial_Num, b.Count, b.Checkout_Date, b.Last_Renewed_Date, b.Due_Date, b.Return_Date
+    SELECT b.Borrowing_ID as borrowID, u2.DODID, u2.LastName as LastName, u2.FirstName as FirstName, s.NSN, s.Name as Name, s.Serial_Num, b.Count as Count, b.Checkout_Date as Checkout_Date, b.Last_Renewed_Date, b.Due_Date, b.Return_Date
     FROM Supply as s
     JOIN Borrowing AS b ON s.ID = b.Item_ID
     JOIN User AS u1 ON b.Lender_DODID = u1.DODID
@@ -141,6 +142,9 @@ def get_all_loaned():
     WHERE u1.DODID = ?
     ORDER BY {sort_column} {sort_order}
     """ 
+
+    print(sort_column, sort_order, user_id)
+    print(query)
 
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -156,13 +160,18 @@ def get_all_borrowed():
     user_id = request.args.get("userid")
     print(user_id)
 
-    query = """
-    SELECT u1.DODID, u1.LastName, u1.FirstName, s.NSN, s.Name, s.Serial_Num, b.Count, b.Checkout_Date, b.Last_Renewed_Date, b.Due_Date, b.Return_Date
+    # default ORDER BY borrowID ASC, implemented in supplyData.js
+    sort_column = request.args.get("sort")
+    sort_order = request.args.get("order")
+
+    query = f"""
+    SELECT b.Borrowing_ID as borrowID, u1.DODID, u1.LastName, u1.FirstName as LastName, s.NSN, s.Name, s.Serial_Num, b.Count, b.Checkout_Date, b.Last_Renewed_Date, b.Due_Date, b.Return_Date
     FROM Supply as s
     JOIN Borrowing AS b ON s.ID = b.Item_ID
     JOIN User AS u1 ON b.Lender_DODID = u1.DODID
     JOIN User AS u2 ON b.Borrower_DODID = u2.DODID
     WHERE u2.DODID = ?
+    ORDER BY {sort_column} {sort_order}
     """
 
     conn = get_db_connection()
