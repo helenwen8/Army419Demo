@@ -37,6 +37,7 @@
         <a href="{{ url_for('newBorrow') }}">
             <button class="loan-button">Loan an Item</button>
         </a>
+        <button class="loan-button" onclick="sendReminders()">Send out Reminders</button>
         
         <div class="supply-table-container">
             <table id="supplyTable">
@@ -51,6 +52,8 @@
                         <th>Count</th>
                         <th>Checkout Date</th>
                         <th>Last Renewed Date</th>
+                        <th>Due Date</th>
+                        <th>Return Date</th>
                         <th>Renew</th>
                     </tr>
                 </thead>
@@ -65,6 +68,21 @@
             const loggedInUserDODID = "{{ current_user.id }}";
             fetchLoanedItems(loggedInUserDODID); // For the Loaned Items page
             console.log(loggedInUserDODID)
+
+            function sendReminders() {
+                fetch("/api/test_send_reminders", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({})
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    alert(data.message);
+                });
+            }
         </script>
     </div>
 </body>

@@ -21,9 +21,11 @@ function fetchLoanedItems(loggedInUserDODID, sort="", order="") {
                     <td>${item.Count || ""}</td>
                     <td>${item.Checkout_Date || ""}</td>
                     <td>${item.Last_Renewed_Date || ""}</td>
+                    <td>${item.Due_Date || ""}</td>
+                    <td>${item.Returned_Date || ""}</td>
                     <td>
-                        <input type="text" placeholder="Initials" id="renew-initials-${item.Borrowing_ID}" />
-                        <button onclick="renewItem('${item.Borrowing_ID}', '${loggedInUserDODID}')">Renew</button>
+                        <input type="text" placeholder="Initials" id="renew-initials-${item.borrowID}" />
+                        <button onclick="renewItem('${item.borrowID}', '${loggedInUserDODID}')">Renew</button>
                     </td>
                 `;
                 supplyTableBody.appendChild(row);
