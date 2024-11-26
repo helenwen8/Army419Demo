@@ -6,7 +6,8 @@ let debounceTimeout;
 // Function to fetch dropdown data
 async function fetchDropdownData(url, query, optionsDiv) {
     try {
-        const response = await fetch(`${url}?query=${query}`);
+        const response = await fetch(`${url}?identifier=${query}`);
+
         const data = await response.json();
         renderOptions(data, optionsDiv);
     } catch (error) {
@@ -80,47 +81,6 @@ function toggleDropdown(show, optionsDivId) {
         optionsDiv.classList.remove("show");
     }
 }
-
-// Submit form data
-// function submitForm(event) {
-//     event.preventDefault();
-//     const item = document.getElementById("item-search").value;
-//     const borrower = document.getElementById("borrower-search").value;
-//     const count = document.getElementById("count").value;
-//     const date = document.getElementById("date").value;
-//     const initials = document.getElementById("initials").value;
-//     console.log(item, borrower)
-
-//     if (!item || !borrower || !count || !date || !initials) {
-//         document.getElementById("responseMessage").innerText = "All fields are required.";
-//         return;
-//     }
-
-//     const data = {
-//         item: item,
-//         lender: lender,
-//         borrower: borrower,
-//         count: parseInt(count),
-//         reason: document.getElementById("reason").value,
-//         date: date,
-//         initials: initials
-//     };
-
-//     fetch("/api/borrow", {
-//         method: "POST",
-//         headers: { "Content-Type": "application/json" },
-//         body: JSON.stringify(data)
-//     })
-//         .then(response => response.json())
-//         .then(data => {
-//             document.getElementById("responseMessage").innerText = data.message;
-//             document.getElementById("supplyForm").reset();
-//         })
-//         .catch(error => {
-//             console.error("Error:", error);
-//             document.getElementById("responseMessage").innerText = "An error occurred.";
-//         });
-// }
 
 // Attach events
 window.onload = () => {

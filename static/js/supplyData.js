@@ -4,7 +4,7 @@ function fetchLoanedItems(loggedInUserDODID, sort="borrowID", order="asc") {
     fetch(`/api/supply/loaned?userid=${loggedInUserDODID}&sort=${sort}&order=${order}`)
         .then(response => response.json())
         .then(data => {
-            console.log(data)
+            console.log('dataaaa', data)
             const supplyTableBody = document.getElementById("supplyTable").querySelector("tbody");
             supplyTableBody.innerHTML = ""; // Clear the table before adding new data
 
@@ -21,9 +21,11 @@ function fetchLoanedItems(loggedInUserDODID, sort="borrowID", order="asc") {
                     <td>${item.Count || ""}</td>
                     <td>${item.Checkout_Date || ""}</td>
                     <td>${item.Last_Renewed_Date || ""}</td>
+                    <td>${item.Due_Date || ""}</td>
+                    <td>${item.Return_Date || ""}</td>
                     <td>
-                        <input type="text" placeholder="Initials" id="renew-initials-${item.Borrowing_ID}" />
-                        <button onclick="renewItem('${item.Borrowing_ID}', '${loggedInUserDODID}')">Renew</button>
+                        <input type="text" placeholder="Initials" id="renew-initials-${item.borrowID}" />
+                        <button onclick="renewItem('${item.borrowID}', '${loggedInUserDODID}')">Renew</button>
                     </td>
                 `;
                 supplyTableBody.appendChild(row);

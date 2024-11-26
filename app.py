@@ -86,33 +86,45 @@ def get_supply():
 
 
 # app.run(debug=True)
-
 @app.route('/api/borrow', methods=['POST'])
 def add_borrow():
     print(f"Current user ID: {current_user.id}")
     data = request.json
     print(f"Received data: {data}")
+    
     item = data.get("item")
     lender = data.get("lender")
     borrower = data.get("borrower")
     count = data.get("count")
     reason = data.get("reason")
-    date = data.get("date")
-    # date = None
+    checkout_date = data.get("date")  # Expecting this as a string in "YYYY-MM-DD" format
     initials = data.get("initials")
+
+    # Calculate the due date: 1 month from the checkout date
+    if checkout_date:
+        checkout_date_obj = datetime.strptime(checkout_date, "%Y-%m-%d")
+        due_date_obj = checkout_date_obj + relativedelta(months=1)
+        due_date = due_date_obj.strftime("%Y-%m-%d")
+    else:
+        # Use the current date if no checkout date is provided
+        checkout_date_obj = datetime.now()
+        due_date_obj = checkout_date_obj + relativedelta(months=1)
+        checkout_date = checkout_date_obj.strftime("%Y-%m-%d")
+        due_date = due_date_obj.strftime("%Y-%m-%d")
 
     conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute(
         """INSERT INTO Borrowing 
-        (Item_ID, Lender_DODID, Borrower_DODID, Count, Reason, Checkout_Date, Last_Renewed_Date, Borrower_Initials) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
-        (item, lender, borrower, count, reason, date, "", initials)
+        (Item_ID, Lender_DODID, Borrower_DODID, Count, Reason, Checkout_Date, Due_Date, Last_Renewed_Date, Borrower_Initials) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+        (item, lender, borrower, count, reason, checkout_date, due_date, "", initials)
     )
     conn.commit()
     conn.close()
 
-    return jsonify({"message": "Item added to Borrowing table"}), 201
+    return jsonify({"message": "Item added to Borrowing table", "due_date": due_date}), 201
+
 
 @app.route('/api/users', methods=['GET'])
 def get_users():
