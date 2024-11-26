@@ -32,6 +32,8 @@ CREATE TABLE Borrowing (
     Reason VARCHAR(255),                  -- Reason for borrowing
     Checkout_Date VARCHAR(255),           -- Date of checkout
     Last_Renewed_Date VARCHAR(255),       -- Date of last renewal
+    Due_Date VARCHAR(255),                -- Date the item is due
+    Return_Date VARCHAR(255),             -- Date the item was returned
     Borrower_Initials VARCHAR(255),       -- Initials of the borrower
     FOREIGN KEY (Item_ID) REFERENCES Supply (ID),
     FOREIGN KEY (Lender_DODID) REFERENCES User (DODID),

@@ -1,6 +1,7 @@
 // const loggedInUserDODID = "{{ current_user.id }}";
-function fetchLoanedItems(loggedInUserDODID) {
-    fetch(`/api/supply/loaned?userid=${loggedInUserDODID}`)
+
+function fetchLoanedItems(loggedInUserDODID, sort="borrowID", order="asc") {
+    fetch(`/api/supply/loaned?userid=${loggedInUserDODID}&sort=${sort}&order=${order}`)
         .then(response => response.json())
         .then(data => {
             console.log(data)
@@ -74,8 +75,8 @@ function renewItem(borrowingId, loggedInUserDODID) {
 }
 
 
-function fetchBorrowedItems(loggedInUserDODID) {
-    fetch(`/api/supply/borrowing?userid=${loggedInUserDODID}`)
+function fetchBorrowedItems(loggedInUserDODID, sort="borrowID", order="asc") {
+    fetch(`/api/supply/borrowing?userid=${loggedInUserDODID}&sort=${sort}&order=${order}`)
         .then(response => response.json())
         .then(data => {
             console.log(loggedInUserDODID)
@@ -102,4 +103,36 @@ function fetchBorrowedItems(loggedInUserDODID) {
         .catch(error => {
             console.error("Error fetching borrowed items:", error);
         });
+}
+
+function sortTableHelper(header) {
+    const column = header.getAttribute("column");
+    console.log(column);
+    const currentOrder = header.className;
+    // if descending OR none, flip to ascending
+    const newOrder = currentOrder === "sort-asc" ? "desc" : "asc";
+
+    // make all table headers NONE
+    header.parentNode.childNodes.forEach(sibling => {sibling.className = ""});
+
+    // Update order attribute for the current selected column
+    header.className = "sort-".concat(newOrder);
+    console.log(header.className);
+
+    // return items needed to sort
+    return [column, newOrder];
+}
+
+function sortLoanedTable(header) {
+    let [column, newOrder] = sortTableHelper(header);
+
+    // Fetch sorted data
+    fetchLoanedItems(loggedInUserDODID, column, newOrder);
+}
+
+function sortBorrowedTable(header) {
+    let [column, newOrder] = sortTableHelper(header);
+
+    // Fetch sorted data
+    fetchBorrowedItems(loggedInUserDODID, column, newOrder);
 }

@@ -37,20 +37,23 @@
         <a href="{{ url_for('newBorrow') }}">
             <button class="loan-button">Loan an Item</button>
         </a>
+        <button class="loan-button" onclick="sendReminders()">Send out Reminders</button>
         
         <div class="supply-table-container">
             <table id="supplyTable">
                 <thead>
                     <tr>
-                        <th>Borrower Last Name</th>
-                        <th>Borrower First Name</th>
+                        <th column="LastName" onclick="sortLoanedTable(this)">Borrower Last Name</th>
+                        <th column="FirstName" onclick="sortLoanedTable(this)">Borrower First Name</th>
                         <th>Borrower DODID</th>
                         <th>Item NSN</th>
-                        <th>Item Name</th>
+                        <th column="Name" onclick="sortLoanedTable(this)">Item Name</th>
                         <th>Item Serial Number</th>
-                        <th>Count</th>
-                        <th>Checkout Date</th>
+                        <th column="Count" onclick="sortLoanedTable(this)">Count</th>
+                        <th column="Checkout_Date" onclick="sortLoanedTable(this)">Checkout Date</th>
                         <th>Last Renewed Date</th>
+                        <th>Due Date</th>
+                        <th>Return Date</th>
                         <th>Renew</th>
                     </tr>
                 </thead>
@@ -65,6 +68,21 @@
             const loggedInUserDODID = "{{ current_user.id }}";
             fetchLoanedItems(loggedInUserDODID); // For the Loaned Items page
             console.log(loggedInUserDODID)
+
+            function sendReminders() {
+                fetch("/api/test_send_reminders", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({})
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    alert(data.message);
+                });
+            }
         </script>
     </div>
 </body>
