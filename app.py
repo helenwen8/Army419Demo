@@ -118,7 +118,7 @@ def add_borrow():
         """INSERT INTO Borrowing 
         (Item_ID, Lender_DODID, Borrower_DODID, Count, Reason, Checkout_Date, Due_Date, Last_Renewed_Date, Borrower_Initials) 
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)""",
-        (item, lender, borrower, count, reason, checkout_date, due_date, "", initials)
+        (item, lender, borrower, count, reason, checkout_date, due_date, checkout_date, initials)
     )
     conn.commit()
     conn.close()
