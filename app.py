@@ -330,6 +330,43 @@ def renew_item():
         print(f"Error renewing borrowing record: {e}")
         return jsonify({"success": False, "message": "Internal server error."}), 500
 
+@app.route('/api/supply/return', methods=['POST'])
+def return_item():
+    print("Called!")
+    data = request.json
+    borrowing_id = data.get("borrowing_id")
+    initials = data.get("initials")
+    print(borrowing_id, initials)
+
+    if not borrowing_id or not initials:
+        return jsonify({"success": False, "message": "Borrowing ID and initials are required."}), 400
+
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        # Update the Last_Renewed_Date in the Borrowing table
+        current_datetime = datetime.now().strftime("%Y-%m-%d")
+        cursor.execute(
+            """
+            UPDATE Borrowing
+            SET Return_Date = ?
+            WHERE Borrowing_ID = ?
+            """,
+            (current_datetime, borrowing_id)
+        )
+        conn.commit()
+        conn.close()
+
+        if cursor.rowcount == 0:
+            return jsonify({"success": False, "message": "No matching borrowing record found."}), 404
+
+        return jsonify({"success": True, "message": "Borrowing record successfully renewed."}), 200
+
+    except Exception as e:
+        print(f"Error renewing borrowing record: {e}")
+        return jsonify({"success": False, "message": "Internal server error."}), 500
+
 
 
 
