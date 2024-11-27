@@ -128,7 +128,7 @@ def add_borrow():
 
 @app.route('/api/users', methods=['GET'])
 def get_users():
-    query = request.args.get("query", "")
+    query = request.args.get("identifier", "")
     conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute("SELECT DODID, FirstName, LastName FROM User WHERE DODID LIKE ?", (f"%{query}%",))
