@@ -220,9 +220,9 @@ th {
 }
 
 .sort-asc:before {
-    content: "\25B4";
+    content: "\25B2";
 }
 
-.sort-dsc:before {
-    content: "\25BE";
+.sort-desc:before {
+    content: "\25BC";
 }

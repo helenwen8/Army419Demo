@@ -15,11 +15,11 @@ VALUES (Null, 'OCCS', Null, Null),
 
 INSERT INTO 
 User (DODID, FirstName, LastName, Email, Phone) 
-VALUES (6246120335, 'Joseph', 'Mayo', '3nnemog@gmail.com', '7225265193'),
-    (6028029736, 'Scott', 'Clancy', '3nnemog@gmail.com', '5185207573'),
-    (5124865241, Null, 'Sauls', '3nnemog@gmail.com', '8798190633'),
-    (8815194770, 'Eric', 'Chambers', '3nnemog@gmail.com', '5253009893'),
-    (8817346652, 'Devin', 'Irelan', '3nnemog@gmail.com', '6751060212');
+VALUES (6246120335, 'Joseph', 'Mayo', 'ellenfang34@gmail.com', '7225265193'),
+    (6028029736, 'Scott', 'Clancy', 'ellenfang34@gmail.com', '5185207573'),
+    (5124865241, Null, 'Sauls', 'ellenfang34@gmail.com', '8798190633'),
+    (8815194770, 'Eric', 'Chambers', 'ellenfang34@gmail.com', '5253009893'),
+    (8817346652, 'Devin', 'Irelan', 'ellenfang34@gmail.com', '6751060212');
 
 INSERT INTO 
 Borrowing (Item_ID, Lender_DODID, Borrower_DODID, Count, Reason, Checkout_Date, Last_Renewed_Date, Due_Date, Return_Date, Borrower_Initials) 

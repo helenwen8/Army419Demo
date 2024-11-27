@@ -18,6 +18,7 @@ This is a reminder that the following items will be due soon:
 """
 
     for item in items:
-        template += f"\t- {item_stringify(item)} - Due {item.get("Due_Date")}\n"
+        template += f"\t- {item_stringify(item)} - Due {item.get('Due_Date')}\n"
+
 
     return template

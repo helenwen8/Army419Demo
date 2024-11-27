@@ -1,10 +1,10 @@
 // const loggedInUserDODID = "{{ current_user.id }}";
 
-function fetchLoanedItems(loggedInUserDODID, sort="", order="") {
+function fetchLoanedItems(loggedInUserDODID, sort="borrowID", order="asc") {
     fetch(`/api/supply/loaned?userid=${loggedInUserDODID}&sort=${sort}&order=${order}`)
         .then(response => response.json())
         .then(data => {
-            console.log(data)
+            console.log('dataaaa', data)
             const supplyTableBody = document.getElementById("supplyTable").querySelector("tbody");
             supplyTableBody.innerHTML = ""; // Clear the table before adding new data
 
@@ -121,7 +121,7 @@ function renewItem(borrowingId, loggedInUserDODID) {
 }
 
 
-function fetchBorrowedItems(loggedInUserDODID,sort="", order="") {
+function fetchBorrowedItems(loggedInUserDODID, sort="borrowID", order="asc") {
     fetch(`/api/supply/borrowing?userid=${loggedInUserDODID}&sort=${sort}&order=${order}`)
         .then(response => response.json())
         .then(data => {
@@ -151,17 +151,65 @@ function fetchBorrowedItems(loggedInUserDODID,sort="", order="") {
         });
 }
 
-
-function sortTable(header) {
+function sortTableHelper(header) {
     const column = header.getAttribute("column");
-    const currentOrder = header.className;
     console.log(column);
-    console.log(currentOrder);
+    const currentOrder = header.className;
+    // if descending OR none, flip to ascending
     const newOrder = currentOrder === "sort-asc" ? "desc" : "asc";
 
-    // Update order attribute
-    header.className = "sort-" + newOrder;
+    // make all table headers NONE
+    header.parentNode.childNodes.forEach(sibling => {sibling.className = ""});
+
+    // Update order attribute for the current selected column
+    header.className = "sort-".concat(newOrder);
+    console.log(header.className);
+
+    // return items needed to sort
+    return [column, newOrder];
+}
+
+function sortLoanedTable(header) {
+    let [column, newOrder] = sortTableHelper(header);
+
+    // Fetch sorted data
+    fetchLoanedItems(loggedInUserDODID, column, newOrder);
+}
+
+function sortBorrowedTable(header) {
+    let [column, newOrder] = sortTableHelper(header);
 
     // Fetch sorted data
     fetchBorrowedItems(loggedInUserDODID, column, newOrder);
+}
+
+
+// funnily enough borrow table also uses the id supplytable
+// so we will just reuse this function......
+function searchLoaned() {
+    var input = document.getElementById("searchLoanedInput");
+    var filter = input.value.toUpperCase();
+    var table = document.getElementById("supplyTable");
+    var tr = table.getElementsByTagName("tr");
+  
+    // Loop through all table rows, and hide those who don't match the search query
+    for (var i = 1; i < tr.length; i++) {
+        var td = tr[i].getElementsByTagName("td");
+
+        // make sure at least one field matches
+        var flag = false;
+        for (var j = 0; j < td.length; j++) {
+            var txtValue = td[j].textContent || td[j].innerText;
+
+            if (txtValue && txtValue.toUpperCase().indexOf(filter) > -1) {
+              flag = true; // keep
+            }
+        }
+        if (flag) {
+            tr[i].style.display = "";
+            
+        } else {
+            tr[i].style.display = "none";
+        }
+    }
 }

@@ -86,37 +86,49 @@ def get_supply():
 
 
 # app.run(debug=True)
-
 @app.route('/api/borrow', methods=['POST'])
 def add_borrow():
     print(f"Current user ID: {current_user.id}")
     data = request.json
     print(f"Received data: {data}")
+    
     item = data.get("item")
     lender = data.get("lender")
     borrower = data.get("borrower")
     count = data.get("count")
     reason = data.get("reason")
-    date = data.get("date")
-    # date = None
+    checkout_date = data.get("date")  # Expecting this as a string in "YYYY-MM-DD" format
     initials = data.get("initials")
+
+    # Calculate the due date: 1 month from the checkout date
+    if checkout_date:
+        checkout_date_obj = datetime.strptime(checkout_date, "%Y-%m-%d")
+        due_date_obj = checkout_date_obj + relativedelta(months=1)
+        due_date = due_date_obj.strftime("%Y-%m-%d")
+    else:
+        # Use the current date if no checkout date is provided
+        checkout_date_obj = datetime.now()
+        due_date_obj = checkout_date_obj + relativedelta(months=1)
+        checkout_date = checkout_date_obj.strftime("%Y-%m-%d")
+        due_date = due_date_obj.strftime("%Y-%m-%d")
 
     conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute(
         """INSERT INTO Borrowing 
-        (Item_ID, Lender_DODID, Borrower_DODID, Count, Reason, Checkout_Date, Last_Renewed_Date, Borrower_Initials) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
-        (item, lender, borrower, count, reason, date, "", initials)
+        (Item_ID, Lender_DODID, Borrower_DODID, Count, Reason, Checkout_Date, Due_Date, Last_Renewed_Date, Borrower_Initials) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+        (item, lender, borrower, count, reason, checkout_date, due_date, "", initials)
     )
     conn.commit()
     conn.close()
 
-    return jsonify({"message": "Item added to Borrowing table"}), 201
+    return jsonify({"message": "Item added to Borrowing table", "due_date": due_date}), 201
+
 
 @app.route('/api/users', methods=['GET'])
 def get_users():
-    query = request.args.get("query", "")
+    query = request.args.get("identifier", "")
     conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute("SELECT DODID, FirstName, LastName FROM User WHERE DODID LIKE ?", (f"%{query}%",))
@@ -129,11 +141,12 @@ def get_users():
 def get_all_loaned():
     user_id = request.args.get("userid")
 
-    sort_column = request.args.get("column", "borrowID")
-    sort_order = request.args.get("order", "asc")
+    # default ORDER BY borrowID ASC, implemented in supplyData.js
+    sort_column = request.args.get("sort")
+    sort_order = request.args.get("order")
 
     query = f"""
-    SELECT b.Borrowing_ID as borrowID, u2.DODID, u2.LastName, u2.FirstName, s.NSN, s.Name, s.Serial_Num, b.Count, b.Checkout_Date, b.Last_Renewed_Date, b.Due_Date, b.Return_Date
+    SELECT b.Borrowing_ID as borrowID, u2.DODID, u2.LastName as LastName, u2.FirstName as FirstName, s.NSN, s.Name as Name, s.Serial_Num, b.Count as Count, b.Checkout_Date as Checkout_Date, b.Last_Renewed_Date, b.Due_Date, b.Return_Date
     FROM Supply as s
     JOIN Borrowing AS b ON s.ID = b.Item_ID
     JOIN User AS u1 ON b.Lender_DODID = u1.DODID
@@ -141,6 +154,9 @@ def get_all_loaned():
     WHERE u1.DODID = ?
     ORDER BY {sort_column} {sort_order}
     """ 
+
+    print(sort_column, sort_order, user_id)
+    print(query)
 
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -156,13 +172,18 @@ def get_all_borrowed():
     user_id = request.args.get("userid")
     print(user_id)
 
-    query = """
-    SELECT u1.DODID, u1.LastName, u1.FirstName, s.NSN, s.Name, s.Serial_Num, b.Count, b.Checkout_Date, b.Last_Renewed_Date, b.Due_Date, b.Return_Date
+    # default ORDER BY borrowID ASC, implemented in supplyData.js
+    sort_column = request.args.get("sort")
+    sort_order = request.args.get("order")
+
+    query = f"""
+    SELECT b.Borrowing_ID as borrowID, u1.DODID, u1.LastName as LastName, u1.FirstName as FirstName, s.NSN, s.Name, s.Serial_Num, b.Count, b.Checkout_Date, b.Last_Renewed_Date, b.Due_Date, b.Return_Date
     FROM Supply as s
     JOIN Borrowing AS b ON s.ID = b.Item_ID
     JOIN User AS u1 ON b.Lender_DODID = u1.DODID
     JOIN User AS u2 ON b.Borrower_DODID = u2.DODID
     WHERE u2.DODID = ?
+    ORDER BY {sort_column} {sort_order}
     """
 
     conn = get_db_connection()
