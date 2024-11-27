@@ -177,7 +177,7 @@ def get_all_borrowed():
     sort_order = request.args.get("order")
 
     query = f"""
-    SELECT b.Borrowing_ID as borrowID, u1.DODID, u1.LastName, u1.FirstName as LastName, s.NSN, s.Name, s.Serial_Num, b.Count, b.Checkout_Date, b.Last_Renewed_Date, b.Due_Date, b.Return_Date
+    SELECT b.Borrowing_ID as borrowID, u1.DODID, u1.LastName as LastName, u1.FirstName as FirstName, s.NSN, s.Name, s.Serial_Num, b.Count, b.Checkout_Date, b.Last_Renewed_Date, b.Due_Date, b.Return_Date
     FROM Supply as s
     JOIN Borrowing AS b ON s.ID = b.Item_ID
     JOIN User AS u1 ON b.Lender_DODID = u1.DODID

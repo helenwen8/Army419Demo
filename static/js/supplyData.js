@@ -138,3 +138,34 @@ function sortBorrowedTable(header) {
     // Fetch sorted data
     fetchBorrowedItems(loggedInUserDODID, column, newOrder);
 }
+
+
+// funnily enough borrow table also uses the id supplytable
+// so we will just reuse this function......
+function searchLoaned() {
+    var input = document.getElementById("searchLoanedInput");
+    var filter = input.value.toUpperCase();
+    var table = document.getElementById("supplyTable");
+    var tr = table.getElementsByTagName("tr");
+  
+    // Loop through all table rows, and hide those who don't match the search query
+    for (var i = 1; i < tr.length; i++) {
+        var td = tr[i].getElementsByTagName("td");
+
+        // make sure at least one field matches
+        var flag = false;
+        for (var j = 0; j < td.length; j++) {
+            var txtValue = td[j].textContent || td[j].innerText;
+
+            if (txtValue && txtValue.toUpperCase().indexOf(filter) > -1) {
+              flag = true; // keep
+            }
+        }
+        if (flag) {
+            tr[i].style.display = "";
+            
+        } else {
+            tr[i].style.display = "none";
+        }
+    }
+}
