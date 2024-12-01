@@ -1,0 +1,8 @@
+Flask
+Flask-Bcrypt
+Flask-Login
+Flask-APScheduler
+python-dateutil
+# smtplib
+# ssl
+# sqlite3

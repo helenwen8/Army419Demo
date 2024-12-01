@@ -9,6 +9,11 @@ Optionally insert test data
 $ python insert_test_data.py
 ```
 
+Install requirements
+```
+$ pip install -r requirements.txt
+```
+
 After that, run `app.py`.
 
 ```
