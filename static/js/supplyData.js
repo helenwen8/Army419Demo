@@ -1,7 +1,13 @@
 // const loggedInUserDODID = "{{ current_user.id }}";
 
 function fetchLoanedItems(loggedInUserDODID, sort="borrowID", order="asc") {
-    fetch(`/api/supply/loaned?userid=${loggedInUserDODID}&sort=${sort}&order=${order}`)
+    fetch(`/api/supply/loaned?userid=${loggedInUserDODID}&sort=${sort}&order=${order}`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "API-Key": "6b04f74c-7ed2-4cf5-bd67-fde95e9091ea",
+        }
+    })
         .then(response => response.json())
         .then(data => {
             const supplyTableBody = document.getElementById("supplyTable").querySelector("tbody");
@@ -51,7 +57,8 @@ function returnItem(borrowingId, loggedInUserDODID) {
     fetch(`/api/supply/return`, {
         method: "POST",
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "API-Key": "6b04f74c-7ed2-4cf5-bd67-fde95e9091ea",
         },
         body: JSON.stringify({
             borrowing_id: borrowingId,
@@ -91,7 +98,8 @@ function renewItem(borrowingId, loggedInUserDODID) {
     fetch(`/api/supply/renew`, {
         method: "POST",
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "API-Key": "6b04f74c-7ed2-4cf5-bd67-fde95e9091ea",
         },
         body: JSON.stringify({
             borrowing_id: borrowingId,
@@ -121,7 +129,13 @@ function renewItem(borrowingId, loggedInUserDODID) {
 
 
 function fetchBorrowedItems(loggedInUserDODID, sort="borrowID", order="asc") {
-    fetch(`/api/supply/borrowing?userid=${loggedInUserDODID}&sort=${sort}&order=${order}`)
+    fetch(`/api/supply/borrowing?userid=${loggedInUserDODID}&sort=${sort}&order=${order}`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "API-Key": "6b04f74c-7ed2-4cf5-bd67-fde95e9091ea",
+        }
+    })
         .then(response => response.json())
         .then(data => {
             console.log(loggedInUserDODID)

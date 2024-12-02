@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, render_template, redirect, url_for, session
+from flask import Flask, request, jsonify, render_template, redirect, url_for, abort
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from flask_apscheduler import APScheduler
@@ -367,7 +367,14 @@ def return_item():
         print(f"Error renewing borrowing record: {e}")
         return jsonify({"success": False, "message": "Internal server error."}), 500
 
-
+API_KEY = '6b04f74c-7ed2-4cf5-bd67-fde95e9091ea'
+@app.before_request
+def check_api_key():
+    if request.path.startswith('/api/'):
+        # Check if the API key is present in the headers
+        api_key = request.headers.get('API-Key')
+        if api_key != API_KEY:
+            abort(403)  # Forbidden if the API key does not match
 
 
 def get_users_with_upcoming_loans():

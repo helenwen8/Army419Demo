@@ -6,7 +6,13 @@ let debounceTimeout;
 // Function to fetch dropdown data
 async function fetchDropdownData(url, query, optionsDiv) {
     try {
-        const response = await fetch(`${url}?identifier=${query}`);
+        const response = await fetch(`${url}?identifier=${query}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "API-Key": "6b04f74c-7ed2-4cf5-bd67-fde95e9091ea",
+            },
+        });
 
         const data = await response.json();
         renderOptions(data, optionsDiv);
