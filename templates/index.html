@@ -36,6 +36,8 @@
                 {% endif %}
             </div>
         </nav>
+
+        <div id="env-value"></div>
         
         <h1>Loaned Items</h1>
         
@@ -68,7 +70,10 @@
                 </tbody>
             </table>
         </div>
-    
+
+        <script>
+          const PINECONE_API_KEY = "{{ PINECONE_API_KEY }}";
+        </script>
         <script src="{{ url_for('static', filename='js/supplyData.js') }}"></script>
         <script>
             const loggedInUserDODID = "{{ current_user.id }}";
@@ -76,11 +81,12 @@
             console.log(loggedInUserDODID)
 
             function sendReminders() {
+                const api_key = "{{ PINECONE_API_KEY }}";
                 fetch("/api/test_send_reminders", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
-                        "API-Key": "6b04f74c-7ed2-4cf5-bd67-fde95e9091ea",
+                        "API-Key": api_key,
                     },
                     body: JSON.stringify({})
                 })

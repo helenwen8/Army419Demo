@@ -36,6 +36,8 @@
                 {% endif %}
             </div>
         </nav>
+
+        
     
         <h1>Borrowed Items</h1>
         <div class="supply-table-container">
@@ -60,7 +62,10 @@
                 </tbody>
             </table>
         </div>
-    
+        
+        <script>
+          const PINECONE_API_KEY = "{{ PINECONE_API_KEY }}";
+        </script>
         <script src="{{ url_for('static', filename='js/supplyData.js') }}"></script>
         <script>
             const loggedInUserDODID = "{{ current_user.id }}";

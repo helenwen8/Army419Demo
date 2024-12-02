@@ -62,11 +62,12 @@
 
             const data = { NSN: nsn, Name: name, Serial_Num: serialNum, Description: description };
 
+            const api_key = "{{ PINECONE_API_KEY }}";
             fetch("/api/supply", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "API-Key": "6b04f74c-7ed2-4cf5-bd67-fde95e9091ea",
+                    "API-Key": api_key,
                 },
                 body: JSON.stringify(data)
             })

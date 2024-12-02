@@ -6,6 +6,8 @@ import sqlite3
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 import smtplib, ssl
+import os, secrets
+
 
 from email_templates import loan_reminder_template
 
@@ -15,6 +17,9 @@ app.secret_key = "supersecretkey"
 bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)
 login_manager.login_view = "login"
+
+# Generate a random API key
+API_KEY = secrets.token_urlsafe(16)
 
 # Configuration for APScheduler
 class Config:
@@ -32,19 +37,19 @@ def get_db_connection():
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index.html', PINECONE_API_KEY=API_KEY)
 
 @app.route('/borroweditems')
 def borrowedItems():
-    return render_template('borrowedItems.html')
+    return render_template('borrowedItems.html', PINECONE_API_KEY=API_KEY)
 
 @app.route('/newitem')
 def newItem():
-    return render_template('newItem.html')
+    return render_template('newItem.html', PINECONE_API_KEY=API_KEY)
 
 @app.route('/newborrow')
 def newBorrow():
-    return render_template('newBorrow.html')
+    return render_template('newBorrow.html', PINECONE_API_KEY=API_KEY)
 
 @app.route('/api/supply', methods=['POST'])
 def add_supply():
@@ -232,7 +237,7 @@ def login():
         else:
             return "Invalid credentials", 401
 
-    return render_template('login.html')
+    return render_template('login.html', PINECONE_API_KEY=API_KEY)
 
 @app.route('/logout')
 @login_required
@@ -273,7 +278,7 @@ def register():
 
         return redirect(url_for('login'))
 
-    return render_template('register.html')
+    return render_template('register.html', PINECONE_API_KEY=API_KEY)
 
 
 @app.route('/profile/<user_id>')
@@ -289,7 +294,7 @@ def profile(user_id):
     conn.close()
 
     if user:
-        return render_template('profile.html', user=dict(user))
+        return render_template('profile.html', user=dict(user), PINECONE_API_KEY=API_KEY)
     else:
         return "User not found", 404
 
@@ -367,7 +372,10 @@ def return_item():
         print(f"Error renewing borrowing record: {e}")
         return jsonify({"success": False, "message": "Internal server error."}), 500
 
-API_KEY = '6b04f74c-7ed2-4cf5-bd67-fde95e9091ea'
+
+    
+
+
 @app.before_request
 def check_api_key():
     if request.path.startswith('/api/'):

@@ -68,6 +68,9 @@
     <p id="responseMessage"></p>
 
 </body>
+<script>
+  const PINECONE_API_KEY = "{{ PINECONE_API_KEY }}";
+</script>
 <script src="{{ url_for('static', filename='js/newBorrow.js') }}"></script>
 <script>
     const lenderDODID = "{{ current_user.id }}";
@@ -96,11 +99,12 @@
             initials: initials
         };
 
+        const api_key = "{{ PINECONE_API_KEY }}";
         fetch("/api/borrow", {
             method: "POST",
             headers: { 
                 "Content-Type": "application/json",
-                "API-Key": "6b04f74c-7ed2-4cf5-bd67-fde95e9091ea",
+                "API-Key": api_key,
              },
             body: JSON.stringify(data)
         })

@@ -1,11 +1,12 @@
 // const loggedInUserDODID = "{{ current_user.id }}";
 
 function fetchLoanedItems(loggedInUserDODID, sort="borrowID", order="asc") {
+    const api_key = PINECONE_API_KEY;
     fetch(`/api/supply/loaned?userid=${loggedInUserDODID}&sort=${sort}&order=${order}`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
-            "API-Key": "6b04f74c-7ed2-4cf5-bd67-fde95e9091ea",
+            "API-Key": api_key,
         }
     })
         .then(response => response.json())
@@ -46,6 +47,7 @@ function fetchLoanedItems(loggedInUserDODID, sort="borrowID", order="asc") {
 }
 
 function returnItem(borrowingId, loggedInUserDODID) {
+    const api_key = PINECONE_API_KEY;
     const initialsInput = document.getElementById(`return-initials-${borrowingId}`);
     const initials = initialsInput.value.trim();
     console.log(borrowingId)
@@ -58,7 +60,7 @@ function returnItem(borrowingId, loggedInUserDODID) {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-            "API-Key": "6b04f74c-7ed2-4cf5-bd67-fde95e9091ea",
+            "API-Key": api_key,
         },
         body: JSON.stringify({
             borrowing_id: borrowingId,
@@ -87,6 +89,7 @@ function returnItem(borrowingId, loggedInUserDODID) {
 }
 
 function renewItem(borrowingId, loggedInUserDODID) {
+    const api_key = PINECONE_API_KEY;
     const initialsInput = document.getElementById(`renew-initials-${borrowingId}`);
     const initials = initialsInput.value.trim();
     console.log(borrowingId)
@@ -99,7 +102,7 @@ function renewItem(borrowingId, loggedInUserDODID) {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-            "API-Key": "6b04f74c-7ed2-4cf5-bd67-fde95e9091ea",
+            "API-Key": api_key,
         },
         body: JSON.stringify({
             borrowing_id: borrowingId,
@@ -129,11 +132,12 @@ function renewItem(borrowingId, loggedInUserDODID) {
 
 
 function fetchBorrowedItems(loggedInUserDODID, sort="borrowID", order="asc") {
+    const api_key = PINECONE_API_KEY;
     fetch(`/api/supply/borrowing?userid=${loggedInUserDODID}&sort=${sort}&order=${order}`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
-            "API-Key": "6b04f74c-7ed2-4cf5-bd67-fde95e9091ea",
+            "API-Key": api_key,
         }
     })
         .then(response => response.json())
