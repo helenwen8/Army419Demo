@@ -9,9 +9,13 @@
 <body>
     <div id="container">
         <nav>
-            <div class="navbar-title">
-                <p>P I N E C O N E</p>
+            <div class="title-section">
+                <img src="{{ url_for('static', filename='images/logo.svg') }}" alt="Pinecone Logo">
+                <div class="navbar-title">
+                    <p>P I N E C O N E</p>
+                </div>
             </div>
+            
             <ul>
                 <li><a href="{{ url_for('index') }}">Loaned Items</a></li>
                 <li><a href="{{ url_for('borrowedItems') }}">Borrowed Items</a></li>
@@ -20,6 +24,8 @@
                 {% if current_user.is_authenticated %}
                     <a href="{{ url_for('profile', user_id=current_user.id) }}">
                         <span class="profile-name">{{ current_user.first_name }} {{ current_user.last_name }}</span>
+                    </a>
+                    <a href="{{ url_for('profile', user_id=current_user.id) }}">
                         <div class="profile-picture">
                             <img src="{{ url_for('static', filename='images/profile.png') }}" alt="Profile Picture">
                         </div>
@@ -29,7 +35,6 @@
                     <a href="{{ url_for('login') }}">Login</a> | <a href="{{ url_for('register') }}">Register</a>
                 {% endif %}
             </div>
-            
         </nav>
         
         <h1>Loaned Items</h1>
@@ -37,7 +42,6 @@
         <a href="{{ url_for('newBorrow') }}">
             <button class="loan-button">Loan an Item</button>
         </a>
-        <button class="loan-button" onclick="sendReminders()">Send out Reminders</button>
         
         <div class="supply-table-container">
             <input type="text" id="searchLoanedInput" onkeyup="searchLoaned()" placeholder="Search for names, items...">

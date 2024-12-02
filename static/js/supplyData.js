@@ -4,7 +4,6 @@ function fetchLoanedItems(loggedInUserDODID, sort="borrowID", order="asc") {
     fetch(`/api/supply/loaned?userid=${loggedInUserDODID}&sort=${sort}&order=${order}`)
         .then(response => response.json())
         .then(data => {
-            console.log('dataaaa', data)
             const supplyTableBody = document.getElementById("supplyTable").querySelector("tbody");
             supplyTableBody.innerHTML = ""; // Clear the table before adding new data
 
@@ -24,12 +23,12 @@ function fetchLoanedItems(loggedInUserDODID, sort="borrowID", order="asc") {
                     <td>${item.Due_Date || ""}</td>
                     <td>${item.Return_Date || ""}</td>
                     <td>
-                        <input type="text" placeholder="Initials" id="renew-initials-${item.borrowID}" />
-                        <button onclick="renewItem('${item.borrowID}', '${loggedInUserDODID}')">Renew</button>
+                        <input type="text" class="initials" placeholder="Initials" id="renew-initials-${item.borrowID}" />
+                        <button class="table-button" onclick="renewItem('${item.borrowID}', '${loggedInUserDODID}')">Renew</button>
                     </td>
                     <td>
-                        <input type="text" placeholder="Initials" id="return-initials-${item.borrowID}" />
-                        <button onclick="returnItem('${item.borrowID}', '${loggedInUserDODID}')">Process Return</button>
+                        <input type="text" class="initials" placeholder="Initials" id="return-initials-${item.borrowID}" />
+                        <button class="table-button" onclick="returnItem('${item.borrowID}', '${loggedInUserDODID}')">Return</button>
                     </td>
                 `;
                 supplyTableBody.appendChild(row);

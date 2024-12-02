@@ -4,7 +4,7 @@ To test this prototype, please initialize the database first.
 $ python initialize_db.py
 ```
 
-Optionally insert test data
+Optionally insert test data (ONLY FOR TESTING, DON'T DO DURING ACTUAL USE)
 ```
 $ python insert_test_data.py
 ```

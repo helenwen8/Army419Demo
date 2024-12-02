@@ -6,9 +6,13 @@
 </head>
 <body>
     <nav>
-        <div class="navbar-title">
-            <p>P I N E C O N E</p>
+        <div class="title-section">
+            <img src="{{ url_for('static', filename='images/logo.svg') }}" alt="Pinecone Logo">
+            <div class="navbar-title">
+                <p>P I N E C O N E</p>
+            </div>
         </div>
+        
         <ul>
             <li><a href="{{ url_for('index') }}">Loaned Items</a></li>
             <li><a href="{{ url_for('borrowedItems') }}">Borrowed Items</a></li>
@@ -17,11 +21,13 @@
             {% if current_user.is_authenticated %}
                 <a href="{{ url_for('profile', user_id=current_user.id) }}">
                     <span class="profile-name">{{ current_user.first_name }} {{ current_user.last_name }}</span>
+                </a>
+                <a href="{{ url_for('profile', user_id=current_user.id) }}">
                     <div class="profile-picture">
                         <img src="{{ url_for('static', filename='images/profile.png') }}" alt="Profile Picture">
                     </div>
-                    <a href="{{ url_for('logout') }}" class="logout-button">Logout</a>
                 </a>
+                <a href="{{ url_for('logout') }}" class="logout-button">Logout</a>
             {% else %}
                 <a href="{{ url_for('login') }}">Login</a> | <a href="{{ url_for('register') }}">Register</a>
             {% endif %}
@@ -35,7 +41,7 @@
             <input type="text" id="item-search" class="dropdown-input" placeholder="Search items..." />
             <div id="item-options" class="dropdown-options"></div>
         </div>
-        <a href="{{ url_for('newItem') }}">Create a new item to loan.</a>
+        <a class="new-item-link" href="{{ url_for('newItem') }}">Create a new item to loan.</a>
     
         <label for="borrower">Borrower:</label>
         <div class="dropdown-container">
@@ -50,13 +56,13 @@
         <input type="date" id="date" name="Date" required>
 
         <label for="reason">Reason:</label>
-        <textarea id="reason" name="Reason" placeholder="Enter the reason for borrowing..."></textarea>
+        <textarea class="reason-text-area" id="reason" name="Reason" placeholder="Enter the reason for borrowing..."></textarea>
 
     
         <label for="initials">Borrower's Initials:</label>
         <input type="text" id="initials" name="Initials" required>
     
-        <button type="submit">Load Item</button>
+        <button type="submit">Loan Item</button>
     </form>
     
     <p id="responseMessage"></p>
