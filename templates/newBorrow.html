@@ -38,14 +38,14 @@
     <form id="supplyForm" onsubmit="submitForm(event)">
         <label for="item">Item:</label>
         <div class="dropdown-container">
-            <input type="text" id="item-search" class="dropdown-input" placeholder="Search items..." />
+            <input type="text" autocomplete="off" id="item-search" class="dropdown-input" placeholder="Search items..." />
             <div id="item-options" class="dropdown-options"></div>
         </div>
         <a class="new-item-link" href="{{ url_for('newItem') }}">Create a new item to loan.</a>
     
         <label for="borrower">Borrower:</label>
         <div class="dropdown-container">
-            <input type="text" id="borrower-search" class="dropdown-input" placeholder="Search borrowers..." />
+            <input type="text" autocomplete="off" id="borrower-search" class="dropdown-input" placeholder="Search borrowers..." />
             <div id="borrower-options" class="dropdown-options"></div>
         </div>
     
@@ -60,7 +60,7 @@
 
     
         <label for="initials">Borrower's Initials:</label>
-        <input type="text" id="initials" name="Initials" required>
+        <input type="text" autocomplete="off" id="initials" name="Initials" required>
     
         <button type="submit">Loan Item</button>
     </form>
